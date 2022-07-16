@@ -3,7 +3,7 @@
 
 # First things first
 * **Run "pip install -r requirements.txt" in root folder**
-* **For windows user first use run "pip install pipwin" and then run "pipwin pyaudio"**
+* **For windows user first use run "pip install pipwin" and then run "pipwin install pyaudio"**
 
 # Voice inputs for Interactions
 
