@@ -165,7 +165,7 @@ def respond(voice_data):
         engine_speak("opening twitter")
 
     # open Galiyaara
-    if there_exists(["open galiyaara"]):
+    if there_exists(["open galiyara"]):
         search_term = voice_data.split("for")[-1]
         url = "https://galiyaara-36629.web.app/"
         webbrowser.get().open(url)
