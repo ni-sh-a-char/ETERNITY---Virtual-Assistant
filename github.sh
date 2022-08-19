@@ -6,7 +6,7 @@
 while :
 do
 echo
-echo "Which Git operation you want to perform ?"
+echo "Which Git operation you want to perform ? "
 echo
 echo "GitHub username: $username"
 echo "Local repository name: $local_repo"
