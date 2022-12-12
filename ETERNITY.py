@@ -226,21 +226,21 @@ def respond(voice_data):
         engine_speak("The computer chose " + cmove)
 
     # 12 calc
-    if there_exists(["plus","minus","multiply","divide","modulus","+","-","*","/","%"]):
+    if there_exists(["plus","minus","multiply","divide","modulus","power","+","-","*","/","%","**"]):
         opr = voice_data.split()[1]
 
         if opr == '+':
             engine_speak(int(voice_data.split()[0]) + int(voice_data.split()[2]))
         elif opr == '-':
-            engine_speak(int(voice_data.split()[0] - int(voice_data.split)[2]))
-        elif opr == 'multiply':
-            engine_speak(int(voice_data.split()[0] * int(voice_data.split)[2]))
-        elif opr == 'divide':
-            engine_speak(int(voice_data.split()[0] / int(voice_data.split)[2]))
-        elif opr == 'modulus':
-            engine_speak(int(voice_data.split()[0] % int(voice_data.split)[2]))
-        elif opr == 'power':
-            engine_speak(int(voice_data.split()[0] ** int(voice_data.split)[2]))
+            engine_speak(int(voice_data.split()[0]) - int(voice_data.split()[2]))
+        elif opr == '*':
+            engine_speak(int(voice_data.split()[0]) * int(voice_data.split()[2]))
+        elif opr == '/':
+            engine_speak(int(voice_data.split()[0]) / int(voice_data.split()[2]))
+        elif opr == '%':
+            engine_speak(int(voice_data.split()[0]) % int(voice_data.split()[2]))
+        elif opr == '**':
+            engine_speak(int(voice_data.split()[0]) ** int(voice_data.split()[2]))
         else:
             engine_speak("Wrong Operator")
         
@@ -269,7 +269,7 @@ def respond(voice_data):
                 engine_speak("i m sorry i could not find the definition for "+definition)
 
 
-    if there_exists(["exit", "quit", "goodbye"]):
+    if there_exists(["exit", "quit", "mute", "goodbye"]):
         engine_speak("we could continue more, but... byee")
         exit()
 
