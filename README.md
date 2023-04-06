@@ -36,3 +36,8 @@
 * **"plus","minus","multiply","divide","modulus","+","-","*","/","%" for calculator operations.**
 * **"capture", "screenshot", "my screen" for capturing screenshot of the screen but you have to change the location in the code**
 * **"exit", "quit", "goodbye" for exiting the program**
+# E.T.E.R.GPT- The ETERNITY with the functionalities like ChatGPT 
+* Just create your own OpenAI key and paste it in the line 9 of the E.T.E.R.GPT.py file 
+```
+openai.api_key = "Paste your OpenAI key"
+```
