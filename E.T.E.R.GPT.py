@@ -6,7 +6,7 @@ import time
 import random
 
 # Initialize OpenAI API
-openai.api_key = ""
+openai.api_key = "Paste your OpenAI key"
 
 # Initialize the text to speech engine 
 engine = pyttsx3.init()
