@@ -3,9 +3,10 @@ import speech_recognition as sr
 import pyttsx3
 import pyaudio
 import time
+import random
 
 # Initialize OpenAI API
-openai.api_key = "Api key here"
+openai.api_key = ""
 
 # Initialize the text to speech engine 
 engine = pyttsx3.init()
@@ -46,6 +47,8 @@ def main():
                 if transcription.lower() == "eternity":
                     # Record audio
                     filename = "input.wav"
+                    response_list = ['Yess...', 'I am listening...', 'What...', 'Yeah tell me...', 'I am with you...', 'Yes what is it...', 'Listening...', 'What is it sugar...']
+                    speak_text(random.choice(response_list))
                     print("Say your question")
                     with sr.Microphone() as source:
                         recognizer = sr.Recognizer()
@@ -61,7 +64,7 @@ def main():
 
                         # Generate the response
                         response = generate_response(text)
-                        print(f"Chat GPT-3 says: {response}")
+                        print(f"ETERNITY says: {response}")
 
                         # Speak the response using text-to-speech
                         speak_text(response)
