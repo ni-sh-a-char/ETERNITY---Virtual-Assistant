@@ -1,6 +1,6 @@
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
 
-# ETERNITY - A Virtual Assistant for Task Automation
+# ETERNITY - A Virtual Assistant to automate many tasks
 
 ETERNITY is a virtual assistant designed to automate various tasks. It can perform actions based on voice inputs and provide assistance in different areas.
 
