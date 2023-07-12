@@ -8,6 +8,7 @@ import openai
 import pyaudio
 import time
 import pyautogui
+import sys
 
 # Initialize OpenAI API
 openai.api_key = "Paste your OpenAI key"
