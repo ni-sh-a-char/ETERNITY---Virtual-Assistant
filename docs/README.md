@@ -1,67 +1,72 @@
-# ETERNITY — Virtual Assistant  
-**A Virtual Assistant to automate many tasks**  
+# ETERNITY---Virtual-Assistant  
+**A Virtual Assistant to automate many tasks**
 
----  
+---
 
 ## Table of Contents
 1. [Overview](#overview)  
-2. [Quick Start](#quick-start)  
-3. [Installation](#installation)  
-4. [Configuration](#configuration)  
-5. [Usage](#usage)  
-6. [API Documentation](#api-documentation)  
-7. [Examples](#examples)  
-8. [Testing](#testing)  
-9. [Contributing](#contributing)  
-10. [License](#license)  
-11. [Acknowledgements](#acknowledgements)  
+2. [Features](#features)  
+3. [Prerequisites](#prerequisites)  
+4. [Installation](#installation)  
+5. [Quick Start / Usage](#quick-start--usage)  
+6. [Configuration](#configuration)  
+7. [API Documentation](#api-documentation)  
+8. [Examples](#examples)  
+9. [Testing](#testing)  
+10. [Contributing](#contributing)  
+11. [License](#license)  
 
----  
+---
 
 ## Overview
-**ETERNITY** is a modular, extensible virtual‑assistant framework written in Python 3.11+.  
-It can:
+`ETERNITY---Virtual-Assistant` is a modular, extensible Python‑based virtual assistant that can:
 
-* Understand natural‑language commands (via OpenAI, Anthropic, or local LLMs).  
-* Execute system commands, manage files, send emails, schedule calendar events, control smart‑home devices, and more.  
-* Be extended with custom “skills” (plugins) that expose new capabilities.  
+- Schedule meetings, set reminders, and manage calendars.  
+- Interact with popular services (Google, Outlook, Slack, GitHub, etc.).  
+- Execute system commands, run scripts, and automate repetitive workflows.  
+- Provide natural‑language chat via OpenAI / local LLM back‑ends.  
+- Be extended with custom “skills” (plugins) written in pure Python.
 
-The project follows a clean **core → plugin → CLI** architecture, making it easy to embed the assistant in other Python applications or run it as a standalone command‑line tool.
+The project follows a **plug‑and‑play** architecture: core services are lightweight, and additional capabilities are added as optional modules.
 
----  
+---
 
-## Quick Start
-```bash
-# Clone the repo
-git clone https://github.com/your-org/ETERNITY---Virtual-Assistant.git
-cd ETERNITY---Virtual-Assistant
+## Features
+| Category | Capability | Details |
+|----------|------------|---------|
+| **Core** | Speech‑to‑Text / Text‑to‑Speech | Uses `whisper.cpp` (local) or OpenAI Whisper API. |
+| | Natural‑Language Understanding | Powered by OpenAI `gpt‑4o-mini` (default) or any OpenAI‑compatible endpoint. |
+| | Task Scheduler | Cron‑like scheduler with persistence (SQLite). |
+| **Integrations** | Google Calendar / Outlook | Create, update, delete events. |
+| | Email (SMTP/IMAP) | Send, read, and filter messages. |
+| | Slack / Discord | Post messages, react to commands. |
+| | GitHub | Create issues, PRs, comment, and run actions. |
+| **Extensibility** | Plugin System | Drop a Python module into `plugins/` and register a skill. |
+| | CLI & REST API | Interact via terminal or HTTP. |
+| **Security** | OAuth2 token storage (encrypted) | Uses `cryptography` to protect secrets. |
+| | Rate‑limit handling | Automatic back‑off for external APIs. |
 
-# Install (recommended inside a virtualenv)
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -e .            # editable install with all extras
+---
 
-# Set up environment variables (see Configuration)
-cp .env.example .env
-# edit .env → add your API keys, etc.
+## Prerequisites
+| Tool | Minimum Version | Why |
+|------|----------------|-----|
+| Python | **3.10** (≥3.11 recommended) | Type‑hints, `match` statements, `tomllib`. |
+| pip | 23.0+ | Dependency management. |
+| Git | 2.30+ | Cloning the repo. |
+| ffmpeg | 4.4+ | Audio capture & conversion (speech). |
+| (Optional) Docker | 20.10+ | Run the assistant in an isolated container. |
+| (Optional) OpenAI API key | – | For LLM‑backed NLU. |
+| (Optional) Google OAuth credentials | – | Calendar integration. |
 
-# Run the assistant
-eternity chat               # interactive chat mode
-# or
-eternity run "Create a reminder for tomorrow at 9 am"
-```
+> **Tip:** On Ubuntu/Debian you can install the system dependencies with:  
+> ```bash  
+> sudo apt-get update && sudo apt-get install -y python3-pip python3-venv ffmpeg git curl  
+> ```
 
----  
+---
 
-## Installation  
-
-### Prerequisites
-| Requirement | Minimum version |
-|-------------|-----------------|
-| Python      | 3.11            |
-| pip         | 23.0+           |
-| git         | any             |
-| (Optional) Docker | 20.10+   |
+## Installation
 
 ### 1. Clone the repository
 ```bash
@@ -69,164 +74,174 @@ git clone https://github.com/your-org/ETERNITY---Virtual-Assistant.git
 cd ETERNITY---Virtual-Assistant
 ```
 
-### 2. Create a virtual environment (highly recommended)
+### 2. Create a virtual environment (recommended)
 ```bash
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 ```
 
-### 3. Install the package
+### 3. Install core dependencies
 ```bash
-# Core installation (no optional extras)
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Install optional extras (pick what you need)
+
+| Extra | Command |
+|-------|---------|
+| **All** (full feature set) | `pip install ".[all]"` |
+| **Google Calendar** | `pip install ".[google]"` |
+| **Slack** | `pip install ".[slack]"` |
+| **Docker support** | `pip install ".[docker]"` |
+| **Testing** | `pip install ".[dev]"` |
+
+> The `pyproject.toml` defines these extras; you can also edit the file to add your own.
+
+### 5. (Optional) Install as a system‑wide command
+```bash
 pip install -e .
-
-# Install with all optional dependencies (LLM providers, smart‑home, etc.)
-pip install -e .[all]
-
-# Or install only the extras you need
-pip install -e .[openai]      # OpenAI API support
-pip install -e .[anthropic]   # Anthropic API support
-pip install -e .[homeassistant] # Home Assistant integration
+# Now you can run `eternity` from anywhere
 ```
 
-### 4. (Optional) Install via Docker
-A Dockerfile is provided for isolated deployments.
-
+### 6. Verify installation
 ```bash
-docker build -t eternity-va .
-docker run -it --rm \
-    -v $(pwd)/.env:/app/.env \
-    eternity-va chat
+eternity --version
+# Expected output: ETERNITY---Virtual-Assistant vX.Y.Z
 ```
 
----  
+---
 
-## Configuration  
+## Quick Start / Usage
 
-All runtime configuration lives in a **`.env`** file at the project root (or can be exported as environment variables).  
-A template is provided: **`.env.example`**.
-
-### Required keys
-| Variable | Description |
-|----------|-------------|
-| `ETERNITY_LOG_LEVEL` | Logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`). Default: `INFO`. |
-| `ETERNITY_DEFAULT_MODEL` | Default LLM model identifier (e.g., `gpt-4o-mini`). |
-| `OPENAI_API_KEY` | Your OpenAI API key (if using OpenAI). |
-| `ANTHROPIC_API_KEY` | Your Anthropic API key (if using Claude). |
-| `HOME_ASSISTANT_URL` | URL of your Home Assistant instance (optional). |
-| `HOME_ASSISTANT_TOKEN` | Long‑lived token for Home Assistant (optional). |
-
-### Example `.env`
-```dotenv
-ETERNITY_LOG_LEVEL=INFO
-ETERNITY_DEFAULT_MODEL=gpt-4o-mini
-
-# OpenAI
-OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# Anthropic (optional)
-ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxx
-
-# Home Assistant (optional)
-HOME_ASSISTANT_URL=http://homeassistant.local:8123
-HOME_ASSISTANT_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+### 1. Initialise configuration
+```bash
+eternity init
 ```
+This command creates a `config.yaml` in the current directory (or `$HOME/.eternity/`). Follow the interactive prompts to:
 
-> **Tip:** Keep `.env` out of version control (`.gitignore` already contains it).
+- Set your **OpenAI API key** (or choose a local LLM).  
+- Provide **OAuth credentials** for Google/Outlook (if you selected those extras).  
+- Choose a **default voice** for TTS.
 
----  
-
-## Usage  
-
-ETERNITY ships with a **CLI** powered by `typer`. The entry point is the `eternity` command.
-
-### 1. Interactive chat
+### 2. Run the assistant in interactive mode
 ```bash
 eternity chat
 ```
-* Type natural‑language commands.
-* The assistant replies in the terminal and can ask follow‑up questions.
-* Press `Ctrl‑C` to exit.
+You’ll see a prompt like:
+```
+[ETERNITY] > Hello! How can I help you today?
+```
+Type natural language commands, e.g.:
 
-### 2. One‑shot execution
+- `Schedule a meeting with Alice tomorrow at 10am about the Q3 report.`  
+- `Send a Slack reminder to #dev-team: "Deploy at 5pm".`  
+- `Run the script scripts/backup.sh and email me the log.`
+
+### 3. Use the CLI for one‑off commands
 ```bash
-eternity run "Send an email to alice@example.com with the subject 'Report' and attach the latest PDF in ~/reports"
-```
-* Returns a concise textual summary of what was done.
+# Create a calendar event
+eternity calendar create \
+    --title "Team Sync" \
+    --start "2025-10-01 09:00" \
+    --duration 60 \
+    --participants alice@example.com,bob@example.com
 
-### 3. Skill management
+# Send an email
+eternity email send \
+    --to john.doe@example.com \
+    --subject "Daily Report" \
+    --body "$(cat reports/daily.txt)"
+```
+
+### 4. Run the REST API server (optional)
 ```bash
-# List installed skills
-eternity skills list
+eternity serve --host 0.0.0.0 --port 8080
+```
+The API is documented in the **API Documentation** section below. You can now POST JSON payloads to `http://localhost:8080/v1/command`.
 
-# Enable a disabled skill
-eternity skills enable calendar
+---
 
-# Disable a skill
-eternity skills disable file_manager
+## Configuration
+
+The configuration file (`config.yaml`) lives in one of two locations (first found wins):
+
+1. **Project root** – `./config.yaml` (useful for per‑project settings).  
+2. **User home** – `$HOME/.eternity/config.yaml` (global defaults).
+
+### Sample `config.yaml`
+
+```yaml
+# -------------------------------------------------
+# Core settings
+# -------------------------------------------------
+assistant:
+  name: "Eternity"
+  language: "en-US"
+  voice: "en_us_fox"
+  llm:
+    provider: "openai"
+    model: "gpt-4o-mini"
+    api_key: "${OPENAI_API_KEY}"   # can be env var reference
+    temperature: 0.2
+    max_tokens: 1024
+
+# -------------------------------------------------
+# Scheduler
+# -------------------------------------------------
+scheduler:
+  db_path: "~/.eternity/schedule.db"
+  timezone: "America/New_York"
+
+# -------------------------------------------------
+# Integrations
+# -------------------------------------------------
+google:
+  enabled: true
+  credentials_file: "~/.eternity/google_credentials.json"
+  token_file: "~/.eternity/google_token.json"
+
+slack:
+  enabled: false
+  bot_token: "${SLACK_BOT_TOKEN}"
+  signing_secret: "${SLACK_SIGNING_SECRET}"
+
+email:
+  smtp:
+    host: "smtp.gmail.com"
+    port: 587
+    user: "myassistant@gmail.com"
+    password: "${SMTP_PASSWORD}"
+  imap:
+    host: "imap.gmail.com"
+    port: 993
+    user: "myassistant@gmail.com"
+    password: "${IMAP_PASSWORD}"
+
+# -------------------------------------------------
+# Security
+# -------------------------------------------------
+security:
+  secret_key: "${ETERNITY_SECRET}"   # used for encrypting tokens
+  encryption_algo: "Fernet"
 ```
 
-### 4. Server mode (REST API)
-```bash
-eternity serve --host 0.0.0.0 --port 8000
+**Tips**
+
+- Use environment variable interpolation (`${VAR_NAME}`) for secrets.  
+- Run `eternity encrypt-secret <plain-text>` to generate a Fernet‑encrypted value.  
+- The `eternity config edit` command opens the file in your `$EDITOR`.
+
+---
+
+## API Documentation
+
+The assistant ships with a **RESTful JSON API** (FastAPI under the hood). The server can be started with `eternity serve`. All endpoints are versioned under `/v1`.
+
+### Base URL
 ```
-* Starts an ASGI server (FastAPI) exposing `/v1/chat`, `/v1/run`, and `/v1/skills` endpoints.
-* Useful for integrating ETERNITY into other services or UI front‑ends.
-
-### 5. Configuration overrides (CLI flags)
-All settings can be overridden at runtime:
-
-```bash
-eternity run "What is the weather in Paris?" --model gpt-4o --temperature 0.7
-```
-
----  
-
-## API Documentation  
-
-Below is a high‑level overview of the public Python API. Full docstrings are available in the source and can be rendered with `pdoc` or `mkdocstrings`.
-
-### Core Packages
-| Module | Description |
-|--------|-------------|
-| `eternity.core.assistant` | Main `Assistant` class – orchestrates LLM calls, skill routing, and response formatting. |
-| `eternity.core.config` | `Config` singleton that loads `.env` and provides typed access to settings. |
-| `eternity.core.logger` | Centralized logger (`eternity.logger`) configured by `ETERNITY_LOG_LEVEL`. |
-| `eternity.core.exceptions` | Custom exception hierarchy (`EternityError`, `SkillError`, `LLMError`, …). |
-
-### Skill System
-*All skills inherit from `eternity.skills.base.SkillBase`.*
-
-| Class | Purpose | Key Methods |
-|-------|---------|-------------|
-| `SkillBase` | Abstract base for all plugins. Handles registration, enable/disable, and metadata. | `execute(self, context, **kwargs)` |
-| `FileManagerSkill` | File‑system operations (list, move, delete, read). | `list_dir`, `read_file`, `write_file` |
-| `EmailSkill` | Send/receive email via SMTP/IMAP. | `send_email`, `search_mail` |
-| `CalendarSkill` | Google Calendar / CalDAV integration. | `create_event`, `list_events` |
-| `HomeAssistantSkill` | Control Home Assistant entities. | `call_service`, `get_state` |
-| `CustomSkill` | Dynamically loaded from `plugins/` folder. | `execute` (user‑defined) |
-
-#### Registering a new skill
-```python
-# plugins/my_gpt_skill.py
-from eternity.skills.base import SkillBase
-
-class MyGPTSkill(SkillBase):
-    name = "my_gpt"
-    description = "Runs a custom prompt against a private LLM."
-
-    async def execute(self, context, prompt: str):
-        # custom logic here
-        return await self.llm_client.complete(prompt)
+http://<host>:<port>/v1
 ```
 
-Add the file to `plugins/` and run:
-```bash
-eternity skills reload
-```
-
-### LLM Clients
-| Class | Provider | Primary Methods |
-|-------|----------|-----------------|
-| `OpenAIClient` | OpenAI | `chat(messages, **kwargs)`, `complete(prompt, **kwargs)` |
-| `AnthropicClient` | Anthropic
+### Authentication
+- **API Key** – Provide `X-API-Key: <your-key>` header
